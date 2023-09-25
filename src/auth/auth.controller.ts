@@ -1,12 +1,20 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
+
+// import { CreateUserDto } from 'src/users/dto/create.user.dto';
+// import { GetUserDto } from 'src/users/dto/get.user.dto';
 
 @Controller('auth')
 export class AuthController {
-  @Post('register')
-  async register(@Body() dto: AuthDto) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @HttpCode(200)
+  @Post('create')
+  async create(@Body() createUserDto: AuthDto) {
+    return await this.authService.createUser(createUserDto);
+  }
   @Post('login')
-  async login(@Body() dto: AuthDto) {}
+  async login(@Body() loginUserDto: AuthDto) {
+    return await this.authService.login(loginUserDto);
+  }
 }

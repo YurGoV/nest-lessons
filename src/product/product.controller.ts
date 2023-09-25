@@ -1,22 +1,35 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
-import { ProductModel } from './product.model/product.model';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { FindProductDto } from './dto/findProduct.dto';
+import { ProductService } from './product.service';
+import { CreateProductDto } from './dto/createProduct.dto';
 
 @Controller('product')
 export class ProductController {
+  constructor(private readonly productService: ProductService) {}
+
   @Post('create')
-  async create(@Body() dto: Omit<ProductModel, '_id'>) {}
+  async create(@Body() createProductDto: CreateProductDto) {
+    return await this.productService.create(createProductDto);
+  }
 
-  @Get(':id')
-  async get(@Param('id') id: string) {}
+  @HttpCode(HttpStatus.OK)
+  @Post('get-by-category')
+  async getByCategory(@Body() findProductDto: FindProductDto) {
+    return this.productService.getByCategory(findProductDto);
+  }
 
-  @Delete(':id')
-  async delete(@Param('id') id: string) {}
+  // @Get(':id')
+  // async get(@Param('id') id: string) {}
+  //
+  // TODO: delete
+  //
+  // @Delete(':id')
+  // async delete(@Param('id') id: string) {}
 
-  @Patch(':id')
-  async patch(@Param('id') id: string, @Body() dto: ProductModel) {}
+  // @Patch(':id')
+  // async patch(@Param('id') id: string, @Body() dto: ProductModel) {}
 
-  @HttpCode(200)
-  @Post()
-  async find(@Body() dto: FindProductDto) {}
+  // @HttpCode(200)
+  // @Post()
+  // async find(@Body() dto: FindProductDto) {}
 }

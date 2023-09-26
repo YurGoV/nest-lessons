@@ -1,11 +1,16 @@
 // TODO: move create and find services to users
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AuthDocument, User } from './auth.model/user.model';
 import { AuthDto } from './dto/auth.dto';
 import { compare, genSalt, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+
+type UserValidationData = {
+  email: string;
+  _id: Types.ObjectId; // Assuming _id is a string
+};
 
 @Injectable()
 export class AuthService {
@@ -45,7 +50,8 @@ export class AuthService {
     return this.userModel.findOne({ email }).exec();
   }
 
-  async validateUser(email: string, password: string): Promise<Pick<User, 'email'>> {
+  // async validateUser(email: string, password: string): Promise<Pick<User, 'email'>> {
+  async validateUser(email: string, password: string): Promise<UserValidationData> {
     const user = await this.findUser(email);
     if (!user) {
       throw new UnauthorizedException('користувача не знайдено');
@@ -57,11 +63,11 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException('пароль невірний');
     }
-    return { email: user.email };
+    return { email: user.email, _id: user._id };
   }
 
-  async login(email: string) {
-    const payload = { email };
+  async login(email: string, _id: Types.ObjectId) {
+    const payload = { email, _id };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

@@ -20,8 +20,11 @@ export class Review {
 
   @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'Product', required: true })
   productId: mongooseSchema.Types.ObjectId;
+  //
   //TODO: check!
   // productId: Product;
+  @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  userId: mongooseSchema.Types.ObjectId;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

@@ -13,6 +13,7 @@ import { CreateReviewDto } from './dto/createReviewDto';
 import { ReviewService } from './review.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwtGuard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { UserData } from 'src/decorators/detUserDataDecorator';
 
 @Controller('review')
 export class ReviewController {
@@ -22,8 +23,15 @@ export class ReviewController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   @Post('create')
-  async create(@Body() createReviewDto: CreateReviewDto) {
-    return await this.reviwService.create(createReviewDto);
+  async create(
+    @Body() createReviewDto: CreateReviewDto,
+    @UserData() data: { email: string; _id: string },
+  ) {
+    // console.log(data._id, 'user data');
+    // createReviewDto.userId = data._id;
+    const payload = { ...createReviewDto, userId: data._id };
+    // return await this.reviwService.create(createReviewDto);
+    return await this.reviwService.create(payload);
   }
 
   @Delete('delete/:id')

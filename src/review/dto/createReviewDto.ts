@@ -8,7 +8,7 @@ export class CreateReviewDto {
 
   @IsString()
   @ApiProperty({ example: 'review_title', description: 'the review title' })
-  readonly title: number;
+  readonly title: string;
 
   @IsNumber()
   @ApiProperty({ example: 'description example', description: 'the review description' })

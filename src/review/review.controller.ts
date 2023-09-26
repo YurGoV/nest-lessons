@@ -5,16 +5,21 @@ import {
   Get,
   Param,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateReviewDto } from './dto/createReviewDto';
 import { ReviewService } from './review.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwtGuard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('review')
 export class ReviewController {
   constructor(private readonly reviwService: ReviewService) {}
 
+  @ApiBearerAuth() //TODO: remove
+  @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   @Post('create')
   async create(@Body() createReviewDto: CreateReviewDto) {

@@ -9,10 +9,11 @@ export class User {
   email: string;
 
   @Prop({ required: true })
-  password: string;
+  passwordHash: string;
+  // password: string;
 
-  @Prop([String])
-  images: string[];
+  // @Prop([String])
+  // images: string[];
 }
 
 export const AuthSchema = SchemaFactory.createForClass(User);

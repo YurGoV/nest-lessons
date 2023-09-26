@@ -9,6 +9,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Swagger example')
     .setDescription('The swagger API description')
+    .addBearerAuth()
     .setVersion('1.0')
     .addTag('test')
     .build();

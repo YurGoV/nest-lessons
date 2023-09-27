@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { CreateReviewDto } from './dto/createReviewDto';
 import { ReviewService } from './review.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwtGuard';
+import { JwtAuthGuard } from '../auth/guards/jwtGuard';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { UserData } from 'src/decorators/detUserDataDecorator';
+import { UserData } from '../decorators/detUserDataDecorator';
 
 @Controller('review')
 export class ReviewController {

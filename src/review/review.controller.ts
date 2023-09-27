@@ -14,10 +14,14 @@ import { ReviewService } from './review.service';
 import { JwtAuthGuard } from '../auth/guards/jwtGuard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { UserData } from '../decorators/detUserDataDecorator';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 @Controller('review')
 export class ReviewController {
-  constructor(private readonly reviwService: ReviewService) {}
+  constructor(
+    private readonly reviwService: ReviewService,
+    private readonly telegramService: TelegramService,
+  ) {}
 
   @ApiBearerAuth() //TODO: remove
   @UseGuards(JwtAuthGuard)
@@ -32,6 +36,18 @@ export class ReviewController {
     const payload = { ...createReviewDto, userId: data._id };
     // return await this.reviwService.create(createReviewDto);
     return await this.reviwService.create(payload);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @Post('notify')
+  async notify(@Body() createReviewDto: CreateReviewDto) {
+    /* eslint-disable prettier/prettier */
+    const message = `Name: ${createReviewDto.name}\n` +
+      `Title: ${createReviewDto.title}\n` +
+      `Description: ${createReviewDto.description}\n` +
+      `Product Id: ${createReviewDto.productId}\n`;
+    /* eslint-enable prettier/prettier */
+    return this.telegramService.sendMessage(message);
   }
 
   @Delete('delete/:id')
